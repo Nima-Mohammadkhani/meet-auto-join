@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <title data-i18n="optionsTitle">تنظیمات</title>
+<script src="theme.js"></script>
 <style>
   @font-face {
     font-family: "Vazir";
@@ -10,17 +11,70 @@
     font-weight: normal;
     font-style: normal;
   }
+
+  /* ── Dark theme (default) ───────────────────────────── */
   :root {
-    --bg: #0f1115;
-    --panel: #171a21;
-    --border: #2a2e3a;
-    --text: #e8eaed;
-    --muted: #9aa0ac;
-    --accent: #4f8cff;
-    --accent-hover: #6fa2ff;
-    --danger: #e05a5a;
+    --bg:                 #0f1115;
+    --panel:              #171a21;
+    --border:             #2a2e3a;
+    --text:               #e8eaed;
+    --muted:              #9aa0ac;
+    --accent:             #4f8cff;
+    --accent-hover:       #6fa2ff;
+    --danger:             #e05a5a;
+    --input-bg:           #10131a;
+    --btn-secondary-bg:   #262a35;
+    --btn-secondary-hover:#303543;
+    --status-color:       #6fd67e;
+    --toggle-on-bg:       #1a3a1a;
+    --toggle-on-text:     #6fd67e;
+    --toggle-off-bg:      #3a1a1a;
+    --toggle-off-text:    #e08080;
   }
+
+  /* ── Light theme ────────────────────────────────────── */
+  html[data-theme="light"] {
+    --bg:                 #f0f2f8;
+    --panel:              #ffffff;
+    --border:             #d1d5e0;
+    --text:               #1e2128;
+    --muted:              #6b7280;
+    --accent:             #2563eb;
+    --accent-hover:       #1d4ed8;
+    --danger:             #dc2626;
+    --input-bg:           #f8f9fc;
+    --btn-secondary-bg:   #e8ebf4;
+    --btn-secondary-hover:#dde1ef;
+    --status-color:       #15803d;
+    --toggle-on-bg:       #dcfce7;
+    --toggle-on-text:     #15803d;
+    --toggle-off-bg:      #fee2e2;
+    --toggle-off-text:    #dc2626;
+  }
+
+  @media (prefers-color-scheme: light) {
+    html:not([data-theme="dark"]) {
+      --bg:                 #f0f2f8;
+      --panel:              #ffffff;
+      --border:             #d1d5e0;
+      --text:               #1e2128;
+      --muted:              #6b7280;
+      --accent:             #2563eb;
+      --accent-hover:       #1d4ed8;
+      --danger:             #dc2626;
+      --input-bg:           #f8f9fc;
+      --btn-secondary-bg:   #e8ebf4;
+      --btn-secondary-hover:#dde1ef;
+      --status-color:       #15803d;
+      --toggle-on-bg:       #dcfce7;
+      --toggle-on-text:     #15803d;
+      --toggle-off-bg:      #fee2e2;
+      --toggle-off-text:    #dc2626;
+    }
+  }
+
   * { box-sizing: border-box; }
+
   body {
     margin: 0;
     padding: 32px;
@@ -29,8 +83,24 @@
     font-family: "Vazir", Tahoma, "Segoe UI", sans-serif;
     max-width: 720px;
     margin-inline: auto;
+    transition: background 0.2s, color 0.2s;
   }
-  h1 { font-size: 20px; margin-bottom: 4px; }
+
+  .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+  .page-header h1 { margin: 0; font-size: 20px; }
+  .theme-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 18px;
+    padding: 4px 9px;
+    line-height: 1;
+    border-radius: 8px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .theme-btn:hover { background: var(--btn-secondary-bg); }
+
   p.sub { color: var(--muted); margin-top: 0; margin-bottom: 24px; font-size: 13px; }
   .card {
     background: var(--panel);
@@ -38,6 +108,7 @@
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 20px;
+    transition: background 0.2s, border-color 0.2s;
   }
   label { display: block; font-size: 13px; margin-bottom: 6px; color: var(--muted); }
   input[type="text"], input[type="url"] {
@@ -45,18 +116,32 @@
     padding: 10px 12px;
     border-radius: 8px;
     border: 1px solid var(--border);
-    background: #10131a;
+    background: var(--input-bg);
     color: var(--text);
     font-size: 14px;
     margin-bottom: 16px;
+    font-family: inherit;
+    transition: background 0.2s, border-color 0.2s;
   }
   input[type="time"] {
     padding: 8px 10px;
     border-radius: 8px;
     border: 1px solid var(--border);
-    background: #10131a;
+    background: var(--input-bg);
     color: var(--text);
     font-size: 14px;
+    font-family: inherit;
+  }
+  input[type="number"] {
+    width: 80px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--input-bg);
+    color: var(--text);
+    font-size: 14px;
+    font-family: inherit;
+    margin: 0;
   }
   .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
   .days { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -64,42 +149,48 @@
     padding: 6px 10px;
     border-radius: 20px;
     border: 1px solid var(--border);
-    background: #10131a;
+    background: var(--input-bg);
     color: var(--muted);
     cursor: pointer;
     font-size: 12px;
     user-select: none;
+    font-family: inherit;
   }
-  .day-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+  .day-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
   button {
     padding: 9px 16px;
     border-radius: 8px;
     border: none;
     background: var(--accent);
-    color: white;
+    color: #fff;
     font-size: 13px;
     cursor: pointer;
+    font-family: inherit;
   }
   button:hover { background: var(--accent-hover); }
-  button.secondary { background: #262a35; color: var(--text); }
-  button.secondary:hover { background: #303543; }
+  button.secondary { background: var(--btn-secondary-bg); color: var(--text); }
+  button.secondary:hover { background: var(--btn-secondary-hover); }
   button.danger { background: transparent; color: var(--danger); padding: 6px 10px; }
-  button.toggle-on  { background: #1a3a1a; color: #6fd67e; padding: 4px 10px; font-size: 12px; }
-  button.toggle-on:hover  { background: #224a22; }
-  button.toggle-off { background: #3a1a1a; color: #e08080; padding: 4px 10px; font-size: 12px; }
-  button.toggle-off:hover { background: #4a2222; }
+  button.danger:hover { background: transparent; }
+  button.toggle-on  { background: var(--toggle-on-bg);  color: var(--toggle-on-text);  padding: 4px 10px; font-size: 12px; }
+  button.toggle-on:hover  { opacity: 0.85; }
+  button.toggle-off { background: var(--toggle-off-bg); color: var(--toggle-off-text); padding: 4px 10px; font-size: 12px; }
+  button.toggle-off:hover { opacity: 0.85; }
   tr.disabled-entry td { opacity: 0.4; }
   table { width: 100%; border-collapse: collapse; margin-top: 12px; }
   th, td { text-align: start; padding: 8px 6px; border-bottom: 1px solid var(--border); font-size: 13px; }
   th { color: var(--muted); font-weight: normal; }
   .checkbox-row { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
   .checkbox-row input { width: auto; margin: 0; }
-  .status { font-size: 13px; color: #6fd67e; height: 18px; margin-top: 8px; }
+  .status { font-size: 13px; color: var(--status-color); height: 18px; margin-top: 8px; }
   .hint { font-size: 12px; color: var(--muted); margin-top: -8px; margin-bottom: 16px; }
 </style>
 </head>
 <body>
-  <h1 data-i18n="pageHeading">ورود خودکار به گوگل میت</h1>
+  <div class="page-header">
+    <h1 data-i18n="pageHeading">ورود خودکار به گوگل میت</h1>
+    <button class="theme-btn" id="themeToggle" title="toggle theme">🌙</button>
+  </div>
   <p class="sub" data-i18n="pageSubtitle">لینک جلسه، نام نمایشی و برنامه زمانی را تنظیم کنید.</p>
 
   <div class="card">
@@ -157,8 +248,7 @@
     </div>
     <div class="row" style="margin-top: 12px; align-items: center; gap: 12px;">
       <label data-i18n="labelNotifyBeforeMinutes" style="margin: 0; white-space: nowrap;">چند دقیقه قبل:</label>
-      <input type="number" id="notifyBeforeMinutes" min="1" max="60" value="5"
-        style="width: 80px; margin: 0; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: #10131a; color: var(--text); font-size: 14px;" />
+      <input type="number" id="notifyBeforeMinutes" min="1" max="60" value="5" />
     </div>
   </div>
 

@@ -2,6 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8" />
+<script src="theme.js"></script>
 <style>
   @font-face {
     font-family: "Vazir";
@@ -9,35 +10,98 @@
     font-weight: normal;
     font-style: normal;
   }
+
+  /* ── Dark theme (default) ─── */
+  :root {
+    --bg:           #0f1115;
+    --panel:        #171a21;
+    --border:       #2a2e3a;
+    --text:         #e8eaed;
+    --muted:        #9aa0ac;
+    --accent:       #4f8cff;
+    --accent-hover: #6fa2ff;
+  }
+
+  /* ── Light theme ─────────── */
+  html[data-theme="light"] {
+    --bg:           #f0f2f8;
+    --panel:        #ffffff;
+    --border:       #d1d5e0;
+    --text:         #1e2128;
+    --muted:        #6b7280;
+    --accent:       #2563eb;
+    --accent-hover: #1d4ed8;
+  }
+
+  @media (prefers-color-scheme: light) {
+    html:not([data-theme="dark"]) {
+      --bg:           #f0f2f8;
+      --panel:        #ffffff;
+      --border:       #d1d5e0;
+      --text:         #1e2128;
+      --muted:        #6b7280;
+      --accent:       #2563eb;
+      --accent-hover: #1d4ed8;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
   body {
     width: 260px;
     padding: 16px;
     font-family: "Vazir", Tahoma, "Segoe UI", sans-serif;
-    background: #0f1115;
-    color: #e8eaed;
+    background: var(--bg);
+    color: var(--text);
+    transition: background 0.2s, color 0.2s;
   }
-  h2 { font-size: 15px; margin: 0 0 10px; }
+
+  .popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .popup-header h2 { font-size: 15px; margin: 0; }
+
+  .theme-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-size: 16px;
+    padding: 2px 6px;
+    cursor: pointer;
+    line-height: 1;
+    border-radius: 6px;
+  }
+  .theme-btn:hover { background: var(--border); }
+
   ul { list-style: none; padding: 0; margin: 0 0 14px; font-size: 13px; }
-  li { padding: 6px 0; border-bottom: 1px solid #2a2e3a; color: #cfd2d8; display: flex; flex-direction: column; gap: 2px; }
+  li { padding: 6px 0; border-bottom: 1px solid var(--border); color: var(--text); display: flex; flex-direction: column; gap: 2px; }
   li:last-child { border-bottom: none; }
-  .label { color: #e8eaed; font-size: 13px; }
-  .time { color: #9aa0ac; font-size: 11px; }
-  .empty { color: #9aa0ac; font-size: 13px; }
+  .label { color: var(--text); font-size: 13px; }
+  .time  { color: var(--muted); font-size: 11px; }
+  .empty { color: var(--muted); font-size: 13px; }
+
   button {
     width: 100%;
     padding: 8px;
     border: none;
     border-radius: 8px;
-    background: #4f8cff;
-    color: white;
+    background: var(--accent);
+    color: #fff;
     font-size: 13px;
     cursor: pointer;
+    font-family: inherit;
   }
-  button:hover { background: #6fa2ff; }
+  button:hover { background: var(--accent-hover); }
 </style>
 </head>
 <body>
-  <h2 data-i18n="popupHeading">ورود خودکار به گوگل میت</h2>
+  <div class="popup-header">
+    <h2 data-i18n="popupHeading">ورود خودکار به گوگل میت</h2>
+    <button class="theme-btn" id="themeToggle" title="toggle theme">🌙</button>
+  </div>
   <div id="list"></div>
   <button id="openOptions" data-i18n="btnSettings">تنظیمات</button>
   <script src="i18n.js"></script>
