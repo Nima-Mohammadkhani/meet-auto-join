@@ -72,13 +72,14 @@ async function sendTelegram(text) {
   }
 }
 
-async function openAndJoinMeeting() {
-  const { meetLink } = await chrome.storage.sync.get(DEFAULTS);
-  if (!meetLink) {
+async function openAndJoinMeeting(link) {
+  const { meetLink: globalLink } = await chrome.storage.sync.get(DEFAULTS);
+  const url = link || globalLink;
+  if (!url) {
     console.warn("Meet Auto Join: لینک جلسه تنظیم نشده است.");
     return;
   }
-  const tab = await chrome.tabs.create({ url: meetLink, active: true });
+  const tab = await chrome.tabs.create({ url, active: true });
 
   const listener = (tabId, info) => {
     if (tabId === tab.id && info.status === "complete") {
@@ -108,6 +109,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   const id = alarm.name.slice(ALARM_PREFIX.length);
 
   const settings = await chrome.storage.sync.get(DEFAULTS);
+  const entry = settings.schedule.find((e) => e.id === id);
 
   // If the browser was closed/asleep at the scheduled time, this alarm only
   // fires once Chrome is back up, possibly long after the meeting started.
@@ -117,10 +119,9 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     sendTelegram(settings.telegramMessage || DEFAULT_TELEGRAM_MESSAGE);
   }
 
-  await openAndJoinMeeting();
+  await openAndJoinMeeting(entry ? entry.meetLink : undefined);
 
   // Reschedule this entry for its next weekly occurrence.
-  const entry = settings.schedule.find((e) => e.id === id);
   if (entry) {
     const [hh, mm] = entry.time.split(":").map(Number);
     const from = new Date();

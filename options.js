@@ -45,6 +45,17 @@ function renderScheduleTable() {
     tdDay.textContent = DAY_NAMES[entry.day];
     const tdTime = document.createElement("td");
     tdTime.textContent = entry.time;
+    const tdLink = document.createElement("td");
+    if (entry.meetLink) {
+      tdLink.textContent = entry.meetLink.replace(/^https?:\/\/meet\.google\.com\//, "");
+      tdLink.style.color = "var(--accent)";
+      tdLink.style.fontSize = "11px";
+      tdLink.title = entry.meetLink;
+    } else {
+      tdLink.textContent = "پیش‌فرض";
+      tdLink.style.color = "var(--muted)";
+      tdLink.style.fontSize = "12px";
+    }
     const tdRemove = document.createElement("td");
     const btn = document.createElement("button");
     btn.textContent = "حذف";
@@ -54,7 +65,7 @@ function renderScheduleTable() {
       renderScheduleTable();
     });
     tdRemove.appendChild(btn);
-    tr.append(tdDay, tdTime, tdRemove);
+    tr.append(tdDay, tdTime, tdLink, tdRemove);
     body.appendChild(tr);
   }
   if (sorted.length === 0) {
@@ -132,11 +143,13 @@ $("addScheduleBtn").addEventListener("click", () => {
     showStatus("لطفاً حداقل یک روز را انتخاب کنید.");
     return;
   }
+  const link = $("entryLink").value.trim();
   for (const day of selectedDays) {
-    state.schedule.push({ id: uid(), day, time });
+    state.schedule.push({ id: uid(), day, time, ...(link ? { meetLink: link } : {}) });
   }
   selectedDays.clear();
   document.querySelectorAll(".day-btn.active").forEach((b) => b.classList.remove("active"));
+  $("entryLink").value = "";
   renderScheduleTable();
 });
 
