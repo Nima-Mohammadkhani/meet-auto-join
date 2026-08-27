@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8" />
-<title>تنظیمات ورود خودکار به گوگل میت</title>
+<title data-i18n="optionsTitle">تنظیمات</title>
 <style>
   :root {
     --bg: #0f1115;
@@ -84,7 +84,7 @@
   button.toggle-off:hover { background: #4a2222; }
   tr.disabled-entry td { opacity: 0.4; }
   table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-  th, td { text-align: right; padding: 8px 6px; border-bottom: 1px solid var(--border); font-size: 13px; }
+  th, td { text-align: start; padding: 8px 6px; border-bottom: 1px solid var(--border); font-size: 13px; }
   th { color: var(--muted); font-weight: normal; }
   .checkbox-row { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
   .checkbox-row input { width: auto; margin: 0; }
@@ -93,98 +93,104 @@
 </style>
 </head>
 <body>
-  <h1>ورود خودکار به گوگل میت</h1>
-  <p class="sub">لینک جلسه، نام نمایشی و برنامه زمانی را تنظیم کنید. اکستنشن در ساعت‌های مشخص‌شده خودش تب جدید باز می‌کند، نام را وارد می‌کند (در صورت نیاز) و وارد جلسه می‌شود.</p>
+  <h1 data-i18n="pageHeading">ورود خودکار به گوگل میت</h1>
+  <p class="sub" data-i18n="pageSubtitle">لینک جلسه، نام نمایشی و برنامه زمانی را تنظیم کنید.</p>
 
   <div class="card">
-    <label for="meetLink">لینک جلسه گوگل میت (ثابت)</label>
-    <input type="url" id="meetLink" placeholder="https://meet.google.com/xxx-xxxx-xxx" />
+    <label for="meetLink" data-i18n="labelMeetLink">لینک جلسه گوگل میت (ثابت)</label>
+    <input type="url" id="meetLink" data-i18n-placeholder="placeholderMeetLink" placeholder="https://meet.google.com/xxx-xxxx-xxx" />
 
-    <label for="displayName">نامی که در صورت نمایش فیلد «نام» وارد شود</label>
-    <input type="text" id="displayName" placeholder="مثلاً: نیما محمدخانی" />
+    <label for="displayName" data-i18n="labelDisplayName">نامی که در صورت نمایش فیلد «نام» وارد شود</label>
+    <input type="text" id="displayName" data-i18n-placeholder="placeholderDisplayName" placeholder="مثلاً: نیما محمدخانی" />
 
     <div class="checkbox-row">
       <input type="checkbox" id="muteBeforeJoin" />
-      <label for="muteBeforeJoin" style="margin:0;">قبل از ورود، میکروفون و دوربین را خاموش کن (تلاش می‌کند)</label>
+      <label for="muteBeforeJoin" data-i18n="labelMuteBeforeJoin" style="margin:0;">قبل از ورود، میکروفون و دوربین را خاموش کن</label>
     </div>
   </div>
 
   <div class="card">
-    <label>افزودن زمان جدید</label>
+    <label data-i18n="sectionSchedule">افزودن زمان جدید</label>
     <div class="row" style="margin-bottom: 10px;">
       <div class="days" id="dayPicker">
-        <div class="day-btn" data-day="6">شنبه</div>
-        <div class="day-btn" data-day="0">یکشنبه</div>
-        <div class="day-btn" data-day="1">دوشنبه</div>
-        <div class="day-btn" data-day="2">سه‌شنبه</div>
-        <div class="day-btn" data-day="3">چهارشنبه</div>
-        <div class="day-btn" data-day="4">پنجشنبه</div>
-        <div class="day-btn" data-day="5">جمعه</div>
+        <div class="day-btn" data-day="6" data-i18n="day6">شنبه</div>
+        <div class="day-btn" data-day="0" data-i18n="day0">یکشنبه</div>
+        <div class="day-btn" data-day="1" data-i18n="day1">دوشنبه</div>
+        <div class="day-btn" data-day="2" data-i18n="day2">سه‌شنبه</div>
+        <div class="day-btn" data-day="3" data-i18n="day3">چهارشنبه</div>
+        <div class="day-btn" data-day="4" data-i18n="day4">پنجشنبه</div>
+        <div class="day-btn" data-day="5" data-i18n="day5">جمعه</div>
       </div>
       <input type="time" id="timeInput" value="09:00" />
-      <button id="addScheduleBtn">افزودن</button>
+      <button id="addScheduleBtn" data-i18n="btnAdd">افزودن</button>
     </div>
-    <input type="text" id="entryLabel" placeholder="عنوان جلسه (اختیاری — مثلاً: دیلی استندآپ)" style="margin-bottom: 8px;" />
-    <input type="url" id="entryLink" placeholder="لینک جلسه این ردیف (اختیاری — خالی = استفاده از لینک پیش‌فرض)" style="margin-bottom: 8px;" />
-    <div class="hint">می‌توانید چند روز را هم‌زمان انتخاب کنید تا برای همه در یک ساعت اضافه شود. برای روزهای مختلف با ساعت‌های متفاوت، هر بار جدا اضافه کنید.</div>
+    <input type="text" id="entryLabel" data-i18n-placeholder="placeholderEntryLabel" placeholder="عنوان جلسه..." style="margin-bottom: 8px;" />
+    <input type="url" id="entryLink" data-i18n-placeholder="placeholderEntryLink" placeholder="لینک جلسه این ردیف..." style="margin-bottom: 8px;" />
+    <div class="hint" data-i18n="hintSchedule">می‌توانید چند روز را هم‌زمان انتخاب کنید.</div>
 
     <table id="scheduleTable">
       <thead>
-        <tr><th>عنوان</th><th>روز</th><th>ساعت</th><th>لینک</th><th>وضعیت</th><th></th></tr>
+        <tr>
+          <th data-i18n="tableColTitle">عنوان</th>
+          <th data-i18n="tableColDay">روز</th>
+          <th data-i18n="tableColTime">ساعت</th>
+          <th data-i18n="tableColLink">لینک</th>
+          <th data-i18n="tableColStatus">وضعیت</th>
+          <th></th>
+        </tr>
       </thead>
       <tbody id="scheduleBody"></tbody>
     </table>
   </div>
 
   <div class="card">
-    <label style="margin-bottom: 12px; color: var(--text); font-size: 14px;">اعلان مرورگر قبل از جلسه</label>
+    <label data-i18n="sectionNotifyBefore" style="margin-bottom: 12px; color: var(--text); font-size: 14px;">اعلان مرورگر قبل از جلسه</label>
     <div class="checkbox-row">
       <input type="checkbox" id="notifyBefore" />
-      <label for="notifyBefore" style="margin:0;">قبل از شروع جلسه، اعلان مرورگر نشان بده</label>
+      <label for="notifyBefore" data-i18n="labelNotifyBefore" style="margin:0;">قبل از شروع جلسه، اعلان مرورگر نشان بده</label>
     </div>
     <div class="row" style="margin-top: 12px; align-items: center; gap: 12px;">
-      <label style="margin: 0; white-space: nowrap;">چند دقیقه قبل:</label>
+      <label data-i18n="labelNotifyBeforeMinutes" style="margin: 0; white-space: nowrap;">چند دقیقه قبل:</label>
       <input type="number" id="notifyBeforeMinutes" min="1" max="60" value="5"
         style="width: 80px; margin: 0; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: #10131a; color: var(--text); font-size: 14px;" />
     </div>
   </div>
 
   <div class="card">
-    <label style="margin-bottom: 12px; color: var(--text); font-size: 14px;">اطلاع‌رسانی در تلگرام</label>
-    <p class="hint" style="margin-top: -4px;">
-      اگر وقت جلسه رسید و به هر دلیلی ورود خودکار انجام نشد (مثلاً کروم بسته بوده، یا دکمه‌ی ورود پیدا نشد)، این اکستنشن می‌تواند یک پیام از طریق ربات تلگرام برایتان بفرستد. برای ساخت ربات: در تلگرام به <b>BotFather@</b> پیام بدهید و دستور <code>/newbot</code> را بزنید تا توکن بگیرید؛ سپس یک بار به ربات ساخته‌شده پیام بدهید و chat id خودتان را از طریق <b>userinfobot@</b> یا آدرس <code>https://api.telegram.org/bot&lt;TOKEN&gt;/getUpdates</code> پیدا کنید.
-    </p>
+    <label data-i18n="sectionTelegram" style="margin-bottom: 12px; color: var(--text); font-size: 14px;">اطلاع‌رسانی در تلگرام</label>
+    <p class="hint" data-i18n="telegramDesc" style="margin-top: -4px;"></p>
 
-    <label for="telegramBotToken">توکن ربات تلگرام (Bot Token)</label>
-    <input type="text" id="telegramBotToken" placeholder="123456789:AAExxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
+    <label for="telegramBotToken" data-i18n="labelBotToken">توکن ربات تلگرام (Bot Token)</label>
+    <input type="text" id="telegramBotToken" data-i18n-placeholder="placeholderBotToken" placeholder="123456789:AAE..." />
 
-    <label for="telegramChatId">Chat ID</label>
-    <input type="text" id="telegramChatId" placeholder="مثلاً: 123456789" />
+    <label for="telegramChatId" data-i18n="labelChatId">Chat ID</label>
+    <input type="text" id="telegramChatId" data-i18n-placeholder="placeholderChatId" placeholder="مثلاً: 123456789" />
 
-    <label for="telegramMessage">متن پیام</label>
-    <input type="text" id="telegramMessage" placeholder="⚠️ به جلسه دیلی نرسیدم، ورود خودکار انجام نشد." />
+    <label for="telegramMessage" data-i18n="labelTelegramMessage">متن پیام</label>
+    <input type="text" id="telegramMessage" data-i18n-placeholder="placeholderTelegramMessage" placeholder="⚠️ ..." />
 
-    <label for="lateThreshold">اگر کروم بسته بوده و بیشتر از این‌قدر دقیقه از ساعت مقرر گذشته، پیام بده</label>
+    <label for="lateThreshold" data-i18n="labelLateThreshold">اگر کروم بسته بوده و بیشتر از این‌قدر دقیقه گذشته، پیام بده</label>
     <input type="text" id="lateThreshold" style="width: 90px; margin-bottom: 16px;" value="5" />
 
     <div class="checkbox-row">
       <input type="checkbox" id="notifyOnLate" />
-      <label for="notifyOnLate" style="margin:0;">وقتی کروم سر ساعت باز نبوده، پیام بده</label>
+      <label for="notifyOnLate" data-i18n="labelNotifyOnLate" style="margin:0;">وقتی کروم سر ساعت باز نبوده، پیام بده</label>
     </div>
     <div class="checkbox-row">
       <input type="checkbox" id="notifyOnFail" />
-      <label for="notifyOnFail" style="margin:0;">وقتی ورود خودکار به جلسه با شکست مواجه شد، پیام بده</label>
+      <label for="notifyOnFail" data-i18n="labelNotifyOnFail" style="margin:0;">وقتی ورود خودکار با شکست مواجه شد، پیام بده</label>
     </div>
 
-    <button class="secondary" id="testTelegramBtn">ارسال پیام تست به تلگرام</button>
+    <button class="secondary" id="testTelegramBtn" data-i18n="btnTestTelegram">ارسال پیام تست به تلگرام</button>
   </div>
 
   <div class="row">
-    <button id="saveBtn">ذخیره تنظیمات</button>
-    <button class="secondary" id="testBtn">تست همین الان (باز کردن و ورود به جلسه)</button>
+    <button id="saveBtn" data-i18n="btnSave">ذخیره تنظیمات</button>
+    <button class="secondary" id="testBtn" data-i18n="btnTestJoin">تست همین الان</button>
   </div>
   <div class="status" id="status"></div>
 
+  <script src="i18n.js"></script>
   <script src="options.js"></script>
 </body>
 </html>

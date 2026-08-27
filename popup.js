@@ -1,12 +1,4 @@
-const DAY_NAMES = {
-  0: "یکشنبه",
-  1: "دوشنبه",
-  2: "سه‌شنبه",
-  3: "چهارشنبه",
-  4: "پنجشنبه",
-  5: "جمعه",
-  6: "شنبه",
-};
+const t = (key) => chrome.i18n.getMessage(key);
 
 chrome.alarms.getAll((alarms) => {
   chrome.storage.sync.get({ schedule: [] }, ({ schedule }) => {
@@ -16,7 +8,7 @@ chrome.alarms.getAll((alarms) => {
       .sort((a, b) => a.scheduledTime - b.scheduledTime);
 
     if (meetAlarms.length === 0) {
-      listEl.innerHTML = '<div class="empty">هنوز زمانی تنظیم نشده است.</div>';
+      listEl.innerHTML = `<div class="empty">${t("popupEmpty")}</div>`;
       return;
     }
 
@@ -26,10 +18,10 @@ chrome.alarms.getAll((alarms) => {
       const id = a.name.slice("meet-join-".length);
       const entry = schedule.find((e) => e.id === id);
       const label = entry && entry.label ? entry.label : "";
-      const timeStr = `${DAY_NAMES[d.getDay()]} ساعت ${d.getHours().toString().padStart(2, "0")}:${d
-        .getMinutes()
-        .toString()
-        .padStart(2, "0")}`;
+      const dayName = t("day" + d.getDay());
+      const hh = d.getHours().toString().padStart(2, "0");
+      const mm = d.getMinutes().toString().padStart(2, "0");
+      const timeStr = `${dayName} ${t("popupTimePrefix")} ${hh}:${mm}`;
       const li = document.createElement("li");
       if (label) {
         li.innerHTML = `<span class="label">${label}</span><span class="time">${timeStr}</span>`;

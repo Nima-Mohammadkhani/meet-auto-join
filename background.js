@@ -1,15 +1,13 @@
 const ALARM_PREFIX = "meet-join-";
 const NOTIFY_PREFIX = "meet-notify-";
+const SNOOZE_PREFIX = "meet-snooze-";
 const MAX_RETRIES = 2;
 const RETRY_DELAY_MS = 25000;
-const SNOOZE_PREFIX = "meet-snooze-";
 const SNOOZE_MINUTES = 5;
-const retryCount = new Map();
 const TELEGRAM_API = "https://api.telegram.org/bot";
-const DEFAULT_TELEGRAM_MESSAGE =
-  "⚠️ به جلسه دیلی نرسیدم، ورود خودکار به گوگل میت انجام نشد.";
+const retryCount = new Map();
 
-const DAY_NAMES_BG = { 0: "یکشنبه", 1: "دوشنبه", 2: "سه‌شنبه", 3: "چهارشنبه", 4: "پنجشنبه", 5: "جمعه", 6: "شنبه" };
+const t = (key, subs) => chrome.i18n.getMessage(key, subs);
 
 const DEFAULTS = {
   meetLink: "",
@@ -18,7 +16,7 @@ const DEFAULTS = {
   schedule: [],
   telegramBotToken: "",
   telegramChatId: "",
-  telegramMessage: DEFAULT_TELEGRAM_MESSAGE,
+  telegramMessage: "",
   lateThresholdMinutes: 5,
   notifyOnLate: true,
   notifyOnFail: true,
@@ -66,15 +64,17 @@ async function scheduleAll() {
 }
 
 function showPreMeetingNotification(entry, minutesBefore) {
-  const title = entry.label ? `⏰ ${entry.label}` : "⏰ جلسه در راه است";
+  const title = entry.label ? `⏰ ${entry.label}` : t("notifTitleDefault");
+  const dayName = t("day" + entry.day);
+  const message = minutesBefore > 0
+    ? t("notifMsgBefore", [dayName, entry.time, String(minutesBefore)])
+    : t("notifMsgNow", [dayName, entry.time]);
   chrome.notifications.create(NOTIFY_PREFIX + entry.id, {
     type: "basic",
     iconUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
     title,
-    message: minutesBefore > 0
-      ? `روز ${DAY_NAMES_BG[entry.day] || ""} ساعت ${entry.time} — ${minutesBefore} دقیقه دیگر شروع می‌شود.`
-      : `روز ${DAY_NAMES_BG[entry.day] || ""} ساعت ${entry.time} — الان وقت ورود است.`,
-    buttons: [{ title: "ورود الان" }, { title: `${SNOOZE_MINUTES} دقیقه دیگر` }],
+    message,
+    buttons: [{ title: t("notifBtnJoin") }, { title: t("notifBtnSnooze") }],
     requireInteraction: true,
   });
 }
@@ -95,7 +95,7 @@ chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIn
 async function sendTelegram(text) {
   const { telegramBotToken, telegramChatId } = await chrome.storage.sync.get(DEFAULTS);
   if (!telegramBotToken || !telegramChatId) {
-    console.warn("Meet Auto Join: توکن یا chat id تلگرام تنظیم نشده است.");
+    console.warn("Meet Auto Join: Telegram token or chat ID not configured.");
     return { ok: false, error: "not-configured" };
   }
   try {
@@ -106,12 +106,12 @@ async function sendTelegram(text) {
     });
     const data = await res.json();
     if (!data.ok) {
-      console.warn("Meet Auto Join: تلگرام خطا داد", data);
+      console.warn("Meet Auto Join: Telegram error", data);
       return { ok: false, error: data.description };
     }
     return { ok: true };
   } catch (e) {
-    console.warn("Meet Auto Join: ارسال پیام تلگرام ناموفق بود", e);
+    console.warn("Meet Auto Join: Failed to send Telegram message", e);
     return { ok: false, error: String(e) };
   }
 }
@@ -120,7 +120,7 @@ async function openAndJoinMeeting(link) {
   const { meetLink: globalLink } = await chrome.storage.sync.get(DEFAULTS);
   const url = link || globalLink;
   if (!url) {
-    console.warn("Meet Auto Join: لینک جلسه تنظیم نشده است.");
+    console.warn("Meet Auto Join: No meeting link configured.");
     return;
   }
   const tab = await chrome.tabs.create({ url, active: true });
@@ -129,7 +129,6 @@ async function openAndJoinMeeting(link) {
   const listener = (tabId, info) => {
     if (tabId === tab.id && info.status === "complete") {
       chrome.tabs.onUpdated.removeListener(listener);
-      // Give the Meet SPA a moment to render its pre-join UI.
       setTimeout(() => {
         chrome.scripting.executeScript({
           target: { tabId: tab.id },
@@ -141,13 +140,8 @@ async function openAndJoinMeeting(link) {
   chrome.tabs.onUpdated.addListener(listener);
 }
 
-chrome.runtime.onInstalled.addListener(() => {
-  scheduleAll();
-});
-
-chrome.runtime.onStartup.addListener(() => {
-  scheduleAll();
-});
+chrome.runtime.onInstalled.addListener(() => scheduleAll());
+chrome.runtime.onStartup.addListener(() => scheduleAll());
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name.startsWith(SNOOZE_PREFIX)) {
@@ -172,21 +166,17 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   const settings = await chrome.storage.sync.get(DEFAULTS);
   const entry = settings.schedule.find((e) => e.id === id);
 
-  // If the browser was closed/asleep at the scheduled time, this alarm only
-  // fires once Chrome is back up, possibly long after the meeting started.
-  // In that case notify immediately instead of (only) trying to join late.
   const lateMs = Date.now() - alarm.scheduledTime;
   if (settings.notifyOnLate && lateMs > settings.lateThresholdMinutes * 60000) {
-    sendTelegram(settings.telegramMessage || DEFAULT_TELEGRAM_MESSAGE);
+    sendTelegram(settings.telegramMessage || t("defaultTelegramMessage"));
   }
 
   await openAndJoinMeeting(entry ? entry.meetLink : undefined);
 
-  // Reschedule this entry for its next weekly occurrence.
   if (entry) {
     const [hh, mm] = entry.time.split(":").map(Number);
     const from = new Date();
-    from.setMinutes(from.getMinutes() + 1); // ensure it lands next week, not today again
+    from.setMinutes(from.getMinutes() + 1);
     const when = nextOccurrence(entry.day, hh, mm, from);
     chrome.alarms.create(alarm.name, { when: when.getTime() });
     if (settings.notifyBefore) {
@@ -208,9 +198,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
   if (message.type === "test-telegram") {
-    sendTelegram("✅ این یک پیام تستی از اکستنشن ورود خودکار به گوگل میت است.").then((result) =>
-      sendResponse(result)
-    );
+    sendTelegram(t("telegramTestMessage")).then((result) => sendResponse(result));
     return true;
   }
   if (message.type === "join-result") {
@@ -233,7 +221,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         retryCount.delete(tabId);
       }
       if (settings.notifyOnFail) {
-        sendTelegram(settings.telegramMessage || DEFAULT_TELEGRAM_MESSAGE);
+        sendTelegram(settings.telegramMessage || t("defaultTelegramMessage"));
       }
     });
     return false;

@@ -1,0 +1,93 @@
+{
+  "extensionName":        { "message": "ورود خودکار به گوگل میت" },
+  "extensionDescription": { "message": "در ساعت‌ها و روزهای مشخص، به‌صورت خودکار لینک گوگل میت را باز کرده و وارد جلسه می‌شود." },
+
+  "day0": { "message": "یکشنبه" },
+  "day1": { "message": "دوشنبه" },
+  "day2": { "message": "سه‌شنبه" },
+  "day3": { "message": "چهارشنبه" },
+  "day4": { "message": "پنجشنبه" },
+  "day5": { "message": "جمعه" },
+  "day6": { "message": "شنبه" },
+
+  "optionsTitle":   { "message": "تنظیمات ورود خودکار به گوگل میت" },
+  "pageHeading":    { "message": "ورود خودکار به گوگل میت" },
+  "pageSubtitle":   { "message": "لینک جلسه، نام نمایشی و برنامه زمانی را تنظیم کنید. اکستنشن در ساعت‌های مشخص‌شده خودش تب جدید باز می‌کند، نام را وارد می‌کند (در صورت نیاز) و وارد جلسه می‌شود." },
+
+  "labelMeetLink":          { "message": "لینک جلسه گوگل میت (ثابت)" },
+  "placeholderMeetLink":    { "message": "https://meet.google.com/xxx-xxxx-xxx" },
+  "labelDisplayName":       { "message": "نامی که در صورت نمایش فیلد «نام» وارد شود" },
+  "placeholderDisplayName": { "message": "مثلاً: نیما محمدخانی" },
+  "labelMuteBeforeJoin":    { "message": "قبل از ورود، میکروفون و دوربین را خاموش کن (تلاش می‌کند)" },
+
+  "sectionSchedule":        { "message": "افزودن زمان جدید" },
+  "placeholderEntryLabel":  { "message": "عنوان جلسه (اختیاری — مثلاً: دیلی استندآپ)" },
+  "placeholderEntryLink":   { "message": "لینک جلسه این ردیف (اختیاری — خالی = استفاده از لینک پیش‌فرض)" },
+  "btnAdd":                 { "message": "افزودن" },
+  "hintSchedule":           { "message": "می‌توانید چند روز را هم‌زمان انتخاب کنید تا برای همه در یک ساعت اضافه شود. برای روزهای مختلف با ساعت‌های متفاوت، هر بار جدا اضافه کنید." },
+
+  "tableColTitle":  { "message": "عنوان" },
+  "tableColDay":    { "message": "روز" },
+  "tableColTime":   { "message": "ساعت" },
+  "tableColLink":   { "message": "لینک" },
+  "tableColStatus": { "message": "وضعیت" },
+  "emptySchedule":  { "message": "هنوز زمانی اضافه نشده است." },
+  "btnEnabled":     { "message": "فعال" },
+  "btnDisabled":    { "message": "غیرفعال" },
+  "btnRemove":      { "message": "حذف" },
+  "linkDefault":    { "message": "پیش‌فرض" },
+
+  "sectionNotifyBefore":        { "message": "اعلان مرورگر قبل از جلسه" },
+  "labelNotifyBefore":          { "message": "قبل از شروع جلسه، اعلان مرورگر نشان بده" },
+  "labelNotifyBeforeMinutes":   { "message": "چند دقیقه قبل:" },
+
+  "sectionTelegram":            { "message": "اطلاع‌رسانی در تلگرام" },
+  "telegramDesc":               { "message": "اگر وقت جلسه رسید و به هر دلیلی ورود خودکار انجام نشد، اکستنشن می‌تواند پیامی از طریق ربات تلگرام بفرستد. برای ساخت ربات: در تلگرام به @BotFather پیام دهید، دستور /newbot را بزنید تا توکن بگیرید، سپس chat id را از طریق @userinfobot پیدا کنید." },
+  "labelBotToken":              { "message": "توکن ربات تلگرام (Bot Token)" },
+  "placeholderBotToken":        { "message": "123456789:AAExxxxxxxxxxxxxxxxxxxxxxxxxxxxx" },
+  "labelChatId":                { "message": "Chat ID" },
+  "placeholderChatId":          { "message": "مثلاً: 123456789" },
+  "labelTelegramMessage":       { "message": "متن پیام" },
+  "placeholderTelegramMessage": { "message": "⚠️ به جلسه دیلی نرسیدم، ورود خودکار انجام نشد." },
+  "labelLateThreshold":         { "message": "اگر کروم بسته بوده و بیشتر از این‌قدر دقیقه از ساعت مقرر گذشته، پیام بده" },
+  "labelNotifyOnLate":          { "message": "وقتی کروم سر ساعت باز نبوده، پیام بده" },
+  "labelNotifyOnFail":          { "message": "وقتی ورود خودکار به جلسه با شکست مواجه شد، پیام بده" },
+  "btnTestTelegram":            { "message": "ارسال پیام تست به تلگرام" },
+
+  "btnSave":     { "message": "ذخیره تنظیمات" },
+  "btnTestJoin": { "message": "تست همین الان (باز کردن و ورود به جلسه)" },
+
+  "statusSaved":           { "message": "ذخیره شد و زمان‌بندی به‌روزرسانی شد." },
+  "errSelectTime":         { "message": "لطفاً ساعت را انتخاب کنید." },
+  "errSelectDay":          { "message": "لطفاً حداقل یک روز را انتخاب کنید." },
+  "statusTestJoin":        { "message": "در حال باز کردن جلسه برای تست..." },
+  "statusTelegramOk":      { "message": "پیام تست به تلگرام ارسال شد." },
+  "statusTelegramFail":    { "message": "ارسال ناموفق بود: " },
+  "statusTelegramCheck":   { "message": "تنظیمات را بررسی کنید." },
+
+  "popupHeading":    { "message": "ورود خودکار به گوگل میت" },
+  "popupEmpty":      { "message": "هنوز زمانی تنظیم نشده است." },
+  "btnSettings":     { "message": "تنظیمات" },
+  "popupTimePrefix": { "message": "ساعت" },
+
+  "notifTitleDefault": { "message": "⏰ جلسه در راه است" },
+  "notifBtnJoin":      { "message": "ورود الان" },
+  "notifBtnSnooze":    { "message": "5 دقیقه دیگر" },
+  "notifMsgBefore": {
+    "message": "روز $DAY$ ساعت $TIME$ — $MINUTES$ دقیقه دیگر شروع می‌شود.",
+    "placeholders": {
+      "day":     { "content": "$1" },
+      "time":    { "content": "$2" },
+      "minutes": { "content": "$3" }
+    }
+  },
+  "notifMsgNow": {
+    "message": "روز $DAY$ ساعت $TIME$ — الان وقت ورود است.",
+    "placeholders": {
+      "day":  { "content": "$1" },
+      "time": { "content": "$2" }
+    }
+  },
+  "defaultTelegramMessage": { "message": "⚠️ به جلسه دیلی نرسیدم، ورود خودکار به گوگل میت انجام نشد." },
+  "telegramTestMessage":     { "message": "✅ این یک پیام تستی از اکستنشن ورود خودکار به گوگل میت است." }
+}

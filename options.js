@@ -1,23 +1,13 @@
-const DAY_NAMES = {
-  0: "یکشنبه",
-  1: "دوشنبه",
-  2: "سه‌شنبه",
-  3: "چهارشنبه",
-  4: "پنجشنبه",
-  5: "جمعه",
-  6: "شنبه",
-};
-
-const DEFAULT_TELEGRAM_MESSAGE = "⚠️ به جلسه دیلی نرسیدم، ورود خودکار به گوگل میت انجام نشد.";
+const t = (key) => chrome.i18n.getMessage(key);
 
 const DEFAULTS = {
   meetLink: "",
   displayName: "",
   muteBeforeJoin: false,
-  schedule: [], // [{id, day, time, meetLink?}]
+  schedule: [], // [{id, day, time, enabled, label?, meetLink?}]
   telegramBotToken: "",
   telegramChatId: "",
-  telegramMessage: DEFAULT_TELEGRAM_MESSAGE,
+  telegramMessage: "",
   lateThresholdMinutes: 5,
   notifyOnLate: true,
   notifyOnFail: true,
@@ -44,13 +34,17 @@ function renderScheduleTable() {
   for (const entry of sorted) {
     const tr = document.createElement("tr");
     if (entry.enabled === false) tr.classList.add("disabled-entry");
+
     const tdLabel = document.createElement("td");
     tdLabel.textContent = entry.label || "—";
     tdLabel.style.color = entry.label ? "var(--text)" : "var(--muted)";
+
     const tdDay = document.createElement("td");
-    tdDay.textContent = DAY_NAMES[entry.day];
+    tdDay.textContent = t("day" + entry.day);
+
     const tdTime = document.createElement("td");
     tdTime.textContent = entry.time;
+
     const tdLink = document.createElement("td");
     if (entry.meetLink) {
       tdLink.textContent = entry.meetLink.replace(/^https?:\/\/meet\.google\.com\//, "");
@@ -58,23 +52,15 @@ function renderScheduleTable() {
       tdLink.style.fontSize = "11px";
       tdLink.title = entry.meetLink;
     } else {
-      tdLink.textContent = "پیش‌فرض";
+      tdLink.textContent = t("linkDefault");
       tdLink.style.color = "var(--muted)";
       tdLink.style.fontSize = "12px";
     }
-    const tdRemove = document.createElement("td");
-    const btn = document.createElement("button");
-    btn.textContent = "حذف";
-    btn.className = "danger";
-    btn.addEventListener("click", () => {
-      state.schedule = state.schedule.filter((e) => e.id !== entry.id);
-      renderScheduleTable();
-    });
-    tdRemove.appendChild(btn);
+
     const tdToggle = document.createElement("td");
     const toggleBtn = document.createElement("button");
     const isEnabled = entry.enabled !== false;
-    toggleBtn.textContent = isEnabled ? "فعال" : "غیرفعال";
+    toggleBtn.textContent = isEnabled ? t("btnEnabled") : t("btnDisabled");
     toggleBtn.className = isEnabled ? "toggle-on" : "toggle-off";
     toggleBtn.addEventListener("click", () => {
       const e = state.schedule.find((s) => s.id === entry.id);
@@ -85,15 +71,26 @@ function renderScheduleTable() {
       renderScheduleTable();
     });
     tdToggle.appendChild(toggleBtn);
+
+    const tdRemove = document.createElement("td");
+    const btn = document.createElement("button");
+    btn.textContent = t("btnRemove");
+    btn.className = "danger";
+    btn.addEventListener("click", () => {
+      state.schedule = state.schedule.filter((e) => e.id !== entry.id);
+      renderScheduleTable();
+    });
+    tdRemove.appendChild(btn);
+
     tr.append(tdLabel, tdDay, tdTime, tdLink, tdToggle, tdRemove);
     body.appendChild(tr);
   }
   if (sorted.length === 0) {
     const tr = document.createElement("tr");
     const td = document.createElement("td");
-    td.colSpan = 3;
+    td.colSpan = 6;
     td.style.color = "#9aa0ac";
-    td.textContent = "هنوز زمانی اضافه نشده است.";
+    td.textContent = t("emptySchedule");
     tr.appendChild(td);
     body.appendChild(tr);
   }
@@ -115,7 +112,7 @@ function load() {
     $("muteBeforeJoin").checked = !!state.muteBeforeJoin;
     $("telegramBotToken").value = state.telegramBotToken || "";
     $("telegramChatId").value = state.telegramChatId || "";
-    $("telegramMessage").value = state.telegramMessage || DEFAULT_TELEGRAM_MESSAGE;
+    $("telegramMessage").value = state.telegramMessage || t("defaultTelegramMessage");
     $("lateThreshold").value = state.lateThresholdMinutes ?? 5;
     $("notifyOnLate").checked = state.notifyOnLate !== false;
     $("notifyOnFail").checked = state.notifyOnFail !== false;
@@ -131,7 +128,7 @@ function save() {
   state.muteBeforeJoin = $("muteBeforeJoin").checked;
   state.telegramBotToken = $("telegramBotToken").value.trim();
   state.telegramChatId = $("telegramChatId").value.trim();
-  state.telegramMessage = $("telegramMessage").value.trim() || DEFAULT_TELEGRAM_MESSAGE;
+  state.telegramMessage = $("telegramMessage").value.trim() || t("defaultTelegramMessage");
   state.lateThresholdMinutes = Math.max(1, Number($("lateThreshold").value) || 5);
   state.notifyOnLate = $("notifyOnLate").checked;
   state.notifyOnFail = $("notifyOnFail").checked;
@@ -139,7 +136,7 @@ function save() {
   state.notifyBeforeMinutes = Math.max(1, Number($("notifyBeforeMinutes").value) || 5);
   chrome.storage.sync.set(state, () => {
     chrome.runtime.sendMessage({ type: "reschedule" }, () => {
-      showStatus("ذخیره شد و زمان‌بندی به‌روزرسانی شد.");
+      showStatus(t("statusSaved"));
     });
   });
 }
@@ -159,14 +156,8 @@ document.querySelectorAll(".day-btn").forEach((btn) => {
 
 $("addScheduleBtn").addEventListener("click", () => {
   const time = $("timeInput").value;
-  if (!time) {
-    showStatus("لطفاً ساعت را انتخاب کنید.");
-    return;
-  }
-  if (selectedDays.size === 0) {
-    showStatus("لطفاً حداقل یک روز را انتخاب کنید.");
-    return;
-  }
+  if (!time) { showStatus(t("errSelectTime")); return; }
+  if (selectedDays.size === 0) { showStatus(t("errSelectDay")); return; }
   const link = $("entryLink").value.trim();
   const label = $("entryLabel").value.trim();
   for (const day of selectedDays) {
@@ -191,7 +182,7 @@ $("saveBtn").addEventListener("click", save);
 $("testBtn").addEventListener("click", () => {
   save();
   chrome.runtime.sendMessage({ type: "test-join" }, () => {
-    showStatus("در حال باز کردن جلسه برای تست...");
+    showStatus(t("statusTestJoin"));
   });
 });
 
@@ -199,9 +190,9 @@ $("testTelegramBtn").addEventListener("click", () => {
   save();
   chrome.runtime.sendMessage({ type: "test-telegram" }, (result) => {
     if (result && result.ok) {
-      showStatus("پیام تست به تلگرام ارسال شد.");
+      showStatus(t("statusTelegramOk"));
     } else {
-      showStatus("ارسال ناموفق بود: " + (result && result.error ? result.error : "تنظیمات را بررسی کنید."));
+      showStatus(t("statusTelegramFail") + (result && result.error ? result.error : t("statusTelegramCheck")));
     }
   });
 });

@@ -1,0 +1,93 @@
+{
+  "extensionName":        { "message": "Google Meet Auto Join" },
+  "extensionDescription": { "message": "Automatically opens and joins Google Meet at scheduled times." },
+
+  "day0": { "message": "Sunday" },
+  "day1": { "message": "Monday" },
+  "day2": { "message": "Tuesday" },
+  "day3": { "message": "Wednesday" },
+  "day4": { "message": "Thursday" },
+  "day5": { "message": "Friday" },
+  "day6": { "message": "Saturday" },
+
+  "optionsTitle":   { "message": "Google Meet Auto Join — Settings" },
+  "pageHeading":    { "message": "Google Meet Auto Join" },
+  "pageSubtitle":   { "message": "Set your Meet link, display name, and schedule. The extension opens a new tab at the scheduled times, enters your name if needed, and joins the meeting." },
+
+  "labelMeetLink":          { "message": "Google Meet Link (persistent)" },
+  "placeholderMeetLink":    { "message": "https://meet.google.com/xxx-xxxx-xxx" },
+  "labelDisplayName":       { "message": "Name to enter if the name field appears" },
+  "placeholderDisplayName": { "message": "e.g. John Smith" },
+  "labelMuteBeforeJoin":    { "message": "Mute mic and camera before joining (best effort)" },
+
+  "sectionSchedule":        { "message": "Add New Time" },
+  "placeholderEntryLabel":  { "message": "Meeting title (optional — e.g. Daily Standup)" },
+  "placeholderEntryLink":   { "message": "Meeting link for this entry (optional — uses default if empty)" },
+  "btnAdd":                 { "message": "Add" },
+  "hintSchedule":           { "message": "Select multiple days to add them all at the same time. For different days with different times, add them separately." },
+
+  "tableColTitle":  { "message": "Title" },
+  "tableColDay":    { "message": "Day" },
+  "tableColTime":   { "message": "Time" },
+  "tableColLink":   { "message": "Link" },
+  "tableColStatus": { "message": "Status" },
+  "emptySchedule":  { "message": "No schedule entries yet." },
+  "btnEnabled":     { "message": "Enabled" },
+  "btnDisabled":    { "message": "Disabled" },
+  "btnRemove":      { "message": "Remove" },
+  "linkDefault":    { "message": "Default" },
+
+  "sectionNotifyBefore":        { "message": "Browser Notification Before Meeting" },
+  "labelNotifyBefore":          { "message": "Show a browser notification before each meeting starts" },
+  "labelNotifyBeforeMinutes":   { "message": "Minutes before:" },
+
+  "sectionTelegram":            { "message": "Telegram Notifications" },
+  "telegramDesc":               { "message": "If auto-join fails for any reason, the extension can send a Telegram message. Create a bot via @BotFather using /newbot to get a token, then find your chat ID via @userinfobot." },
+  "labelBotToken":              { "message": "Telegram Bot Token" },
+  "placeholderBotToken":        { "message": "123456789:AAExxxxxxxxxxxxxxxxxxxxxxxxxxxxx" },
+  "labelChatId":                { "message": "Chat ID" },
+  "placeholderChatId":          { "message": "e.g. 123456789" },
+  "labelTelegramMessage":       { "message": "Message text" },
+  "placeholderTelegramMessage": { "message": "⚠️ Missed the meeting — auto-join failed." },
+  "labelLateThreshold":         { "message": "If Chrome was closed and more than N minutes have passed since the meeting, send a notification" },
+  "labelNotifyOnLate":          { "message": "Notify when Chrome wasn't open at the scheduled time" },
+  "labelNotifyOnFail":          { "message": "Notify when auto-join fails" },
+  "btnTestTelegram":            { "message": "Send Test Telegram Message" },
+
+  "btnSave":     { "message": "Save Settings" },
+  "btnTestJoin": { "message": "Test Join Now (open and join meeting)" },
+
+  "statusSaved":           { "message": "Saved and schedule updated." },
+  "errSelectTime":         { "message": "Please select a time." },
+  "errSelectDay":          { "message": "Please select at least one day." },
+  "statusTestJoin":        { "message": "Opening meeting for test..." },
+  "statusTelegramOk":      { "message": "Test message sent to Telegram." },
+  "statusTelegramFail":    { "message": "Send failed: " },
+  "statusTelegramCheck":   { "message": "Check your settings." },
+
+  "popupHeading":    { "message": "Google Meet Auto Join" },
+  "popupEmpty":      { "message": "No schedule set yet." },
+  "btnSettings":     { "message": "Settings" },
+  "popupTimePrefix": { "message": "at" },
+
+  "notifTitleDefault": { "message": "⏰ Meeting Coming Up" },
+  "notifBtnJoin":      { "message": "Join Now" },
+  "notifBtnSnooze":    { "message": "5 min later" },
+  "notifMsgBefore": {
+    "message": "$DAY$ at $TIME$ — starts in $MINUTES$ min.",
+    "placeholders": {
+      "day":     { "content": "$1" },
+      "time":    { "content": "$2" },
+      "minutes": { "content": "$3" }
+    }
+  },
+  "notifMsgNow": {
+    "message": "$DAY$ at $TIME$ — time to join!",
+    "placeholders": {
+      "day":  { "content": "$1" },
+      "time": { "content": "$2" }
+    }
+  },
+  "defaultTelegramMessage": { "message": "⚠️ Missed the meeting — Google Meet auto-join failed." },
+  "telegramTestMessage":     { "message": "✅ This is a test message from the Google Meet Auto Join extension." }
+}
