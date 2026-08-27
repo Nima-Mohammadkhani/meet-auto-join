@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Google Meet Auto Join",
+  "version": "1.0.0",
+  "description": "در ساعت‌ها و روزهای مشخص، به‌صورت خودکار لینک گوگل میت را باز کرده و وارد جلسه می‌شود.",
+  "permissions": ["alarms", "storage", "tabs", "scripting"],
+  "host_permissions": ["https://meet.google.com/*", "https://api.telegram.org/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_page": "options.html",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Meet Auto Join"
+  }
+}
