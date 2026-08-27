@@ -1,5 +1,8 @@
 const ALARM_PREFIX = "meet-join-";
 const NOTIFY_PREFIX = "meet-notify-";
+const MAX_RETRIES = 2;
+const RETRY_DELAY_MS = 25000;
+const retryCount = new Map();
 const TELEGRAM_API = "https://api.telegram.org/bot";
 const DEFAULT_TELEGRAM_MESSAGE =
   "⚠️ به جلسه دیلی نرسیدم، ورود خودکار به گوگل میت انجام نشد.";
@@ -112,6 +115,7 @@ async function openAndJoinMeeting(link) {
     return;
   }
   const tab = await chrome.tabs.create({ url, active: true });
+  retryCount.set(tab.id, 0);
 
   const listener = (tabId, info) => {
     if (tabId === tab.id && info.status === "complete") {
@@ -193,10 +197,26 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
   if (message.type === "join-result") {
-    // Reported by join-script.js after it stops trying (joined or timed out).
-    chrome.storage.sync.get(DEFAULTS).then(({ notifyOnFail, telegramMessage }) => {
-      if (!message.joined && notifyOnFail) {
-        sendTelegram(telegramMessage || DEFAULT_TELEGRAM_MESSAGE);
+    const tabId = sender.tab ? sender.tab.id : null;
+    chrome.storage.sync.get(DEFAULTS).then((settings) => {
+      if (message.joined) {
+        if (tabId !== null) retryCount.delete(tabId);
+        return;
+      }
+      if (tabId !== null) {
+        const count = retryCount.get(tabId) || 0;
+        if (count < MAX_RETRIES) {
+          retryCount.set(tabId, count + 1);
+          setTimeout(() => {
+            chrome.scripting.executeScript({ target: { tabId }, files: ["join-script.js"] })
+              .catch(() => retryCount.delete(tabId));
+          }, RETRY_DELAY_MS);
+          return;
+        }
+        retryCount.delete(tabId);
+      }
+      if (settings.notifyOnFail) {
+        sendTelegram(settings.telegramMessage || DEFAULT_TELEGRAM_MESSAGE);
       }
     });
     return false;
