@@ -14,13 +14,15 @@ const DEFAULTS = {
   meetLink: "",
   displayName: "",
   muteBeforeJoin: false,
-  schedule: [], // [{id, day, time}]
+  schedule: [], // [{id, day, time, meetLink?}]
   telegramBotToken: "",
   telegramChatId: "",
   telegramMessage: DEFAULT_TELEGRAM_MESSAGE,
   lateThresholdMinutes: 5,
   notifyOnLate: true,
   notifyOnFail: true,
+  notifyBefore: false,
+  notifyBeforeMinutes: 5,
 };
 
 let state = structuredClone(DEFAULTS);
@@ -99,6 +101,8 @@ function load() {
     $("lateThreshold").value = state.lateThresholdMinutes ?? 5;
     $("notifyOnLate").checked = state.notifyOnLate !== false;
     $("notifyOnFail").checked = state.notifyOnFail !== false;
+    $("notifyBefore").checked = !!state.notifyBefore;
+    $("notifyBeforeMinutes").value = state.notifyBeforeMinutes ?? 5;
     renderScheduleTable();
   });
 }
@@ -113,6 +117,8 @@ function save() {
   state.lateThresholdMinutes = Math.max(1, Number($("lateThreshold").value) || 5);
   state.notifyOnLate = $("notifyOnLate").checked;
   state.notifyOnFail = $("notifyOnFail").checked;
+  state.notifyBefore = $("notifyBefore").checked;
+  state.notifyBeforeMinutes = Math.max(1, Number($("notifyBeforeMinutes").value) || 5);
   chrome.storage.sync.set(state, () => {
     chrome.runtime.sendMessage({ type: "reschedule" }, () => {
       showStatus("ذخیره شد و زمان‌بندی به‌روزرسانی شد.");

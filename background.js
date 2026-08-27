@@ -1,7 +1,10 @@
 const ALARM_PREFIX = "meet-join-";
+const NOTIFY_PREFIX = "meet-notify-";
 const TELEGRAM_API = "https://api.telegram.org/bot";
 const DEFAULT_TELEGRAM_MESSAGE =
   "⚠️ به جلسه دیلی نرسیدم، ورود خودکار به گوگل میت انجام نشد.";
+
+const DAY_NAMES_BG = { 0: "یکشنبه", 1: "دوشنبه", 2: "سه‌شنبه", 3: "چهارشنبه", 4: "پنجشنبه", 5: "جمعه", 6: "شنبه" };
 
 const DEFAULTS = {
   meetLink: "",
@@ -14,6 +17,8 @@ const DEFAULTS = {
   lateThresholdMinutes: 5,
   notifyOnLate: true,
   notifyOnFail: true,
+  notifyBefore: false,
+  notifyBeforeMinutes: 5,
 };
 
 function nextOccurrence(day, hour, minute, from = new Date()) {
@@ -32,20 +37,35 @@ async function clearMeetAlarms() {
   const alarms = await chrome.alarms.getAll();
   await Promise.all(
     alarms
-      .filter((a) => a.name.startsWith(ALARM_PREFIX))
+      .filter((a) => a.name.startsWith(ALARM_PREFIX) || a.name.startsWith(NOTIFY_PREFIX))
       .map((a) => chrome.alarms.clear(a.name))
   );
 }
 
 async function scheduleAll() {
   await clearMeetAlarms();
-  const { schedule } = await chrome.storage.sync.get(DEFAULTS);
+  const settings = await chrome.storage.sync.get(DEFAULTS);
   const now = new Date();
-  for (const entry of schedule) {
+  for (const entry of settings.schedule) {
     const [hh, mm] = entry.time.split(":").map(Number);
     const when = nextOccurrence(entry.day, hh, mm, now);
     chrome.alarms.create(ALARM_PREFIX + entry.id, { when: when.getTime() });
+    if (settings.notifyBefore) {
+      const notifyWhen = when.getTime() - (settings.notifyBeforeMinutes || 5) * 60000;
+      if (notifyWhen > Date.now()) {
+        chrome.alarms.create(NOTIFY_PREFIX + entry.id, { when: notifyWhen });
+      }
+    }
   }
+}
+
+function showPreMeetingNotification(entry, minutesBefore) {
+  chrome.notifications.create(NOTIFY_PREFIX + entry.id, {
+    type: "basic",
+    iconUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+    title: "⏰ جلسه در راه است",
+    message: `جلسه روز ${DAY_NAMES_BG[entry.day] || ""} ساعت ${entry.time} — ${minutesBefore} دقیقه دیگر شروع می‌شود.`,
+  });
 }
 
 async function sendTelegram(text) {
@@ -105,6 +125,14 @@ chrome.runtime.onStartup.addListener(() => {
 });
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
+  if (alarm.name.startsWith(NOTIFY_PREFIX)) {
+    const id = alarm.name.slice(NOTIFY_PREFIX.length);
+    const settings = await chrome.storage.sync.get(DEFAULTS);
+    const entry = settings.schedule.find((e) => e.id === id);
+    if (entry) showPreMeetingNotification(entry, settings.notifyBeforeMinutes || 5);
+    return;
+  }
+
   if (!alarm.name.startsWith(ALARM_PREFIX)) return;
   const id = alarm.name.slice(ALARM_PREFIX.length);
 
@@ -128,6 +156,12 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     from.setMinutes(from.getMinutes() + 1); // ensure it lands next week, not today again
     const when = nextOccurrence(entry.day, hh, mm, from);
     chrome.alarms.create(alarm.name, { when: when.getTime() });
+    if (settings.notifyBefore) {
+      const notifyWhen = when.getTime() - (settings.notifyBeforeMinutes || 5) * 60000;
+      if (notifyWhen > Date.now()) {
+        chrome.alarms.create(NOTIFY_PREFIX + entry.id, { when: notifyWhen });
+      }
+    }
   }
 });
 

@@ -131,6 +131,19 @@
   </div>
 
   <div class="card">
+    <label style="margin-bottom: 12px; color: var(--text); font-size: 14px;">اعلان مرورگر قبل از جلسه</label>
+    <div class="checkbox-row">
+      <input type="checkbox" id="notifyBefore" />
+      <label for="notifyBefore" style="margin:0;">قبل از شروع جلسه، اعلان مرورگر نشان بده</label>
+    </div>
+    <div class="row" style="margin-top: 12px; align-items: center; gap: 12px;">
+      <label style="margin: 0; white-space: nowrap;">چند دقیقه قبل:</label>
+      <input type="number" id="notifyBeforeMinutes" min="1" max="60" value="5"
+        style="width: 80px; margin: 0; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: #10131a; color: var(--text); font-size: 14px;" />
+    </div>
+  </div>
+
+  <div class="card">
     <label style="margin-bottom: 12px; color: var(--text); font-size: 14px;">اطلاع‌رسانی در تلگرام</label>
     <p class="hint" style="margin-top: -4px;">
       اگر وقت جلسه رسید و به هر دلیلی ورود خودکار انجام نشد (مثلاً کروم بسته بوده، یا دکمه‌ی ورود پیدا نشد)، این اکستنشن می‌تواند یک پیام از طریق ربات تلگرام برایتان بفرستد. برای ساخت ربات: در تلگرام به <b>BotFather@</b> پیام بدهید و دستور <code>/newbot</code> را بزنید تا توکن بگیرید؛ سپس یک بار به ربات ساخته‌شده پیام بدهید و chat id خودتان را از طریق <b>userinfobot@</b> یا آدرس <code>https://api.telegram.org/bot&lt;TOKEN&gt;/getUpdates</code> پیدا کنید.
