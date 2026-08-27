@@ -1,51 +1,173 @@
-# ورود خودکار به گوگل میت (Chrome Extension)
+﻿<div align="center">
 
-این اکستنشن در روزها و ساعت‌های مشخصی که تعیین می‌کنید، خودش یک تب جدید باز می‌کند، لینک ثابت جلسه گوگل میت را باز می‌کند، در صورت نیاز نام شما را وارد می‌کند و دکمه‌ی «Join now» / «Ask to join» را می‌زند.
+# 📅 Meet Auto Join
 
-## نصب (به‌صورت Unpacked)
+**Automatically join your Google Meet meetings — on schedule, hands-free.**
 
-1. فایل zip را از حالت فشرده خارج کنید (Extract).
-2. در کروم به آدرس `chrome://extensions` بروید.
-3. گزینه‌ی «Developer mode» (بالا-راست صفحه) را روشن کنید.
-4. روی «Load unpacked» کلیک کنید و پوشه‌ی extract‌شده را انتخاب کنید.
-5. آیکن اکستنشن را در نوار ابزار کروم پیدا کنید (ممکن است لازم باشد از منوی پازل‌شکل pin‌اش کنید) و روی «تنظیمات» بزنید، یا مستقیماً راست‌کلیک روی آیکن > Options.
+[![Chrome Extension](https://img.shields.io/badge/Chrome%20Extension-Manifest%20V3-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/mv3/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-Vanilla%20JS-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![i18n](https://img.shields.io/badge/i18n-FA%20%7C%20EN-FF6B6B?style=for-the-badge&logo=googletranslate&logoColor=white)](#bilingual-support)
+[![Telegram](https://img.shields.io/badge/Telegram-Bot%20API-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://core.telegram.org/bots/api)
+[![License](https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge)](LICENSE)
 
-## تنظیمات
+</div>
 
-- **لینک جلسه**: همان لینک ثابت گوگل میت شما (مثل `https://meet.google.com/xxx-xxxx-xxx`).
-- **نام نمایشی**: اگر مرورگر با اکانت گوگل شما لاگین نباشد، میت یک فیلد «Your name» نشان می‌دهد؛ این نام در آن فیلد تایپ می‌شود. اگر از قبل با اکانت گوگل خودتان در کروم لاگین هستید، معمولاً این فیلد اصلاً ظاهر نمی‌شود و مستقیم می‌رود سراغ دکمه‌ی ورود.
-- **خاموش کردن میکروفون/دوربین قبل از ورود**: اختیاری؛ تلاش می‌کند قبل از زدن دکمه‌ی ورود آن‌ها را خاموش کند (بسته به رابط کاربری گوگل میت ممکن است همیشه موفق نشود).
-- **زمان‌بندی**: روزهای هفته + ساعت را اضافه کنید. می‌توانید چند روز را هم‌زمان تیک بزنید تا با یک ساعت اضافه شوند، یا برای روزهای مختلف ساعت‌های متفاوت جدا اضافه کنید. هر مورد به‌صورت هفتگی تکرار می‌شود.
-- دکمه‌ی «تست همین الان» را بزنید تا بدون منتظر ماندن، فرآیند باز کردن و ورود به جلسه را همین حالا امتحان کنید.
+---
 
-## اطلاع‌رسانی در تلگرام (اگر به‌موقع وارد جلسه نشدید)
+## ✨ Features
 
-اگر می‌خواهید وقتی به هر دلیلی ورود خودکار انجام نشد (مثلاً سیستم/کروم در آن ساعت خاموش بوده، یا دکمه‌ی ورود در صفحه پیدا نشد) یک پیام تلگرام برایتان ارسال شود:
+| Feature | Description |
+|---|---|
+| **⏰ Weekly Scheduling** | Set any combination of days + times; the extension auto-joins every week without lifting a finger |
+| **🔗 Per-meeting Links** | Each schedule entry can have its own Meet URL, overriding the global default |
+| **🏷️ Meeting Labels** | Name your meetings (e.g. "Daily Standup") — shown in the popup and notifications |
+| **🔔 Pre-meeting Notifications** | Get a Chrome notification N minutes before join time, fully configurable |
+| **✅ Join Now / 😴 Snooze** | Notification action buttons — click **Join Now** to open Meet immediately, or **Snooze** to be reminded again in 5 minutes |
+| **🔁 Smart Retry** | If the join button isn't found on first attempt, the content script retries up to 2 times with a 25-second gap before giving up |
+| **🟢 Enable / Disable Per Entry** | Toggle any individual schedule entry on or off without deleting it |
+| **📲 Telegram Fallback Alerts** | Sends a Telegram message when Chrome was closed at meeting time, or when auto-join fails |
+| **🌐 Bilingual (FA / EN)** | Full Persian and English support; UI direction (RTL / LTR) switches automatically based on browser language |
+| **🌙 Dark / Light Mode** | System-preference-aware theming; no flash on load. Toggle manually with the ☀️ / 🌙 button |
+| **🔤 Vazir Font** | Beautiful Persian-optimised Vazir typeface, bundled locally — no network request needed |
 
-1. در تلگرام به `@BotFather` پیام بدهید، دستور `/newbot` را بزنید و اسمی برای ربات انتخاب کنید. یک **Bot Token** به شما می‌دهد (چیزی شبیه `123456789:AAExxxxxxxxxxxxxxxxxxxxxxxxxxxxx`).
-2. یک بار به ربات تازه‌ساخته‌شده‌تان پیام بدهید (مثلاً `/start`) تا چت باز شود.
-3. **Chat ID** خودتان را پیدا کنید: ساده‌ترین راه، پیام دادن به `@userinfobot` است؛ یا بعد از مرحله‌ی ۲، آدرس زیر را در مرورگر باز کنید و مقدار `chat.id` را از خروجی JSON بردارید:
-   `https://api.telegram.org/bot<TOKEN>/getUpdates`
-4. توکن و Chat ID را در صفحه‌ی تنظیمات اکستنشن (بخش «اطلاع‌رسانی در تلگرام») وارد کنید و «ذخیره تنظیمات» یا «ارسال پیام تست به تلگرام» را بزنید.
+---
 
-دو حالت جدا برای ارسال پیام وجود دارد که هرکدام را می‌توانید جدا روشن/خاموش کنید:
+## 🛠 Tech Stack
 
-- **کروم سر ساعت باز نبوده**: اگر سیستم/کروم بسته یا خواب بوده و اکستنشن دیرتر از حد آستانه‌ای که تعیین می‌کنید (پیش‌فرض ۵ دقیقه) متوجه‌ی زمان جلسه شده، بلافاصله پیام تلگرام می‌فرستد (چون احتمالاً ورود خودکار هم دیر/بی‌فایده خواهد بود).
-- **ورود خودکار شکست خورد**: اگر تب باز شده ولی اسکریپت نتوانسته دکمه‌ی ورود را در ~۳۰ ثانیه پیدا و کلیک کند (مثلاً گوگل UI را تغییر داده یا صفحه‌ی غیرمنتظره‌ای باز شده)، پیام تلگرام ارسال می‌شود.
+| Layer | Technology |
+|---|---|
+| Runtime | Chrome Extension — Manifest V3 |
+| Background | Service Worker (`background.js`) — Chrome Alarms API |
+| Content Script | `join-script.js` — DOM polling for the Meet join button |
+| Storage | `chrome.storage.sync` (settings) · `localStorage` (theme, no flash) |
+| Scheduling | `chrome.alarms` — weekly re-scheduling, notify alarms, snooze alarms |
+| Notifications | `chrome.notifications` with action buttons |
+| i18n | Chrome built-in `chrome.i18n` — `_locales/fa` & `_locales/en` |
+| Styling | Vanilla CSS with CSS custom properties (full dark/light variable system) |
+| Fonts | Vazir Medium — self-hosted via `@font-face` |
+| Telegram | Telegram Bot API (`sendMessage`) |
 
-## نکات مهم
+---
 
-- **کروم باید باز باشد**: این یک اکستنشن مرورگر است، نه یک سرویس مستقل؛ اگر کروم بسته باشد یا سیستم خاموش/خواب باشد، در آن ساعت هیچ اتفاقی نمی‌افتد.
-- **اجازه‌ی دوربین/میکروفون**: اولین باری که وارد آن لینک میت می‌شوید، کروم یک پاپ‌آپ سیستمی برای اجازه‌ی دسترسی به دوربین/میکروفون نشان می‌دهد. این پاپ‌آپ را همان یک‌بار دستی تایید کنید؛ دفعات بعد کروم آن را به‌خاطر می‌سپارد و اکستنشن نیازی به لمس آن ندارد (اکستنشن نمی‌تواند این پاپ‌آپ سیستمی را خودش کلیک کند).
-- **لاگین گوگل**: اگر می‌خواهید بدون نیاز به تایید ورود توسط برگزارکننده (Ask to join) و بدون فیلد نام، مستقیم وارد شوید، بهتر است در همان پروفایل کروم از قبل با اکانت گوگلی که در جلسه مجاز است لاگین باشید.
-- ساعت‌ها بر اساس ساعت سیستم (سیستم‌عامل) شما اجرا می‌شوند.
-- گوگل هرازگاهی متن دکمه‌ها/چیدمان صفحه‌ی میت را تغییر می‌دهد. اسکریپت (`join-script.js`) بر اساس متن دکمه‌ها (Join now / Ask to join و معادل فارسی) کار می‌کند تا مقاوم‌تر باشد؛ اگر گوگل UI را عوض کند، ممکن است لازم شود عبارت‌های داخل `JOIN_RE` در همان فایل به‌روزرسانی شود.
-- این اکستنشن روی مرورگر شما اجرا می‌شود و نیازی به سرور یا اکانت اضافه ندارد؛ تمام تنظیمات با `chrome.storage.sync` ذخیره می‌شود (اگر Sync کروم روشن باشد بین دستگاه‌های شما هم همگام می‌شود).
+## 📁 Project Structure
 
-## ساختار فایل‌ها
+```
+meet-auto-join/
+├── manifest.json           # Extension config — MV3, permissions, i18n
+├── background.js           # Service worker: alarms, scheduling, notifications, retry, Telegram
+├── join-script.js          # Content script: DOM automation inside the Meet tab
+├── options.html            # Settings page — full schedule & Telegram config UI
+├── options.js              # Settings logic — CRUD for schedule entries
+├── popup.html              # Toolbar popup — upcoming meetings at a glance
+├── popup.js                # Popup: reads alarms + labels from storage
+├── i18n.js                 # i18n utility: applies data-i18n text & RTL/LTR direction
+├── theme.js                # Theme manager: dark/light/auto, prevents flash, toggle button
+├── _locales/
+│   ├── fa/
+│   │   └── messages.json   # Persian translations (65+ keys)
+│   └── en/
+│       └── messages.json   # English translations
+└── font/
+    └── Vazir-Medium.woff   # Bundled Vazir font (no CDN)
+```
 
-- `manifest.json` — تعریف اکستنشن (Manifest V3)
-- `background.js` — زمان‌بندی با `chrome.alarms` و باز کردن تب در ساعت مقرر
-- `join-script.js` — اسکریپتی که داخل صفحه‌ی میت تزریق می‌شود: نام را پر می‌کند و دکمه‌ی ورود را می‌زند
-- `options.html` / `options.js` — صفحه‌ی تنظیمات
-- `popup.html` / `popup.js` — نمایش سریع زمان‌های بعدی از آیکن اکستنشن
+---
+
+## 🚀 Installation
+
+No build step required — this extension runs directly from source.
+
+1. **Clone or download** this repository:
+   ```bash
+   git clone https://github.com/Nima-Mohammadkhani/meet-auto-join.git
+   ```
+
+2. Open Chrome and navigate to `chrome://extensions`
+
+3. Enable **Developer mode** (toggle in the top-right corner)
+
+4. Click **Load unpacked** and select the project folder
+
+5. The extension icon appears in your toolbar — click it and then **Settings** to configure
+
+> **Tip:** Pin the extension from the puzzle-piece menu so the popup is always one click away.
+
+---
+
+## ⚙️ Configuration
+
+### Global Settings
+
+| Field | Description |
+|---|---|
+| **Meet Link** | Your default Google Meet URL — used for entries that don't have their own link |
+| **Display Name** | Typed into the "Your name" field if Google shows it (usually only for non-signed-in sessions) |
+| **Mute before joining** | Attempts to turn off mic & camera before clicking the join button |
+
+### Schedule Entries
+
+1. Select one or more **days of the week** (multi-select supported)
+2. Pick a **time**
+3. Optionally add a **label** (e.g. `Weekly Sync`) and an **entry-specific Meet link**
+4. Click **Add** — the entry appears in the table below
+5. Use the **Enabled / Disabled** toggle on any row to pause it without deleting
+
+### Pre-meeting Notifications
+
+Enable the checkbox and set how many minutes before the meeting you want to be notified. The notification includes **Join Now** and **Snooze (5 min)** action buttons.
+
+### Telegram Alerts
+
+| Field | Description |
+|---|---|
+| **Bot Token** | From `@BotFather` → `/newbot` |
+| **Chat ID** | Your personal chat ID (find via `@userinfobot` or the `getUpdates` API) |
+| **Message text** | Custom alert message; leave blank for the default |
+| **Late threshold** | Minutes past meeting time before a "Chrome was closed" alert fires |
+| **Notify on late** | Alert when Chrome was not open at meeting time |
+| **Notify on fail** | Alert when the join button could not be found after all retries |
+
+Use **Send test message** to verify your token and chat ID before saving.
+
+---
+
+## 🔬 How It Works
+
+```
+chrome.alarms.onAlarm
+       │
+       ├── NOTIFY_PREFIX  →  showPreMeetingNotification()
+       │                           └── chrome.notifications (Join / Snooze buttons)
+       │
+       ├── SNOOZE_PREFIX  →  re-show notification after 5 min
+       │
+       └── ALARM_PREFIX   →  openAndJoinMeeting()
+                                  ├── chrome.tabs.create({ url })
+                                  ├── wait for tab "complete"
+                                  ├── executeScript(join-script.js)  ← polls for join button
+                                  │       └── reports { type: "join-result", joined }
+                                  │
+                                  ├── joined = false → retry (max 2×, delay 25 s)
+                                  └── still failed  → sendTelegram()
+```
+
+**Smart Retry:** `join-script.js` polls the DOM every 700 ms for up to 40 ticks (~28 s). If it cannot find the join button, it reports failure. `background.js` schedules up to 2 re-injections with a 25-second gap before sending a Telegram alert.
+
+**Theme, no flash:** `theme.js` is loaded in `<head>` and reads `localStorage` synchronously — the correct theme is applied before the browser paints a single pixel.
+
+**i18n without inline scripts:** MV3's CSP blocks inline scripts. All UI strings are applied via `data-i18n` attributes that `i18n.js` replaces at runtime, and `data-i18n-placeholder` for input placeholders.
+
+---
+
+## 📝 Important Notes
+
+- **Chrome must be open** — this is a browser extension, not a background service. If Chrome or your machine is off at meeting time, nothing will fire.
+- **Camera / microphone permissions** — approve the popup the first time you visit your Meet link manually; Chrome remembers it and the extension will not be blocked again.
+- **Google Meet UI changes** — `join-script.js` matches button text (`Join now`, `Ask to join`, and their Persian equivalents). If Google updates its UI, update the `JOIN_RE` regex in `join-script.js`.
+- **Sync across devices** — settings are stored with `chrome.storage.sync`, so if Chrome sync is enabled they follow you to other machines automatically.
+
+---
+
+## 📄 License
+
+MIT © [Nima Mohammadkhani](https://github.com/Nima-Mohammadkhani)
