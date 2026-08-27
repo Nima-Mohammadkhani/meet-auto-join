@@ -66,8 +66,19 @@ function showPreMeetingNotification(entry, minutesBefore) {
     iconUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
     title,
     message: `روز ${DAY_NAMES_BG[entry.day] || ""} ساعت ${entry.time} — ${minutesBefore} دقیقه دیگر شروع می‌شود.`,
+    buttons: [{ title: "ورود الان" }],
+    requireInteraction: true,
   });
 }
+
+chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIndex) => {
+  if (!notificationId.startsWith(NOTIFY_PREFIX) || buttonIndex !== 0) return;
+  const id = notificationId.slice(NOTIFY_PREFIX.length);
+  const settings = await chrome.storage.sync.get(DEFAULTS);
+  const entry = settings.schedule.find((e) => e.id === id);
+  chrome.notifications.clear(notificationId);
+  await openAndJoinMeeting(entry ? entry.meetLink : undefined);
+});
 
 async function sendTelegram(text) {
   const { telegramBotToken, telegramChatId } = await chrome.storage.sync.get(DEFAULTS);
