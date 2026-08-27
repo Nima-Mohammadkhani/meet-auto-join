@@ -78,6 +78,11 @@
   button.secondary { background: #262a35; color: var(--text); }
   button.secondary:hover { background: #303543; }
   button.danger { background: transparent; color: var(--danger); padding: 6px 10px; }
+  button.toggle-on  { background: #1a3a1a; color: #6fd67e; padding: 4px 10px; font-size: 12px; }
+  button.toggle-on:hover  { background: #224a22; }
+  button.toggle-off { background: #3a1a1a; color: #e08080; padding: 4px 10px; font-size: 12px; }
+  button.toggle-off:hover { background: #4a2222; }
+  tr.disabled-entry td { opacity: 0.4; }
   table { width: 100%; border-collapse: collapse; margin-top: 12px; }
   th, td { text-align: right; padding: 8px 6px; border-bottom: 1px solid var(--border); font-size: 13px; }
   th { color: var(--muted); font-weight: normal; }
@@ -125,7 +130,7 @@
 
     <table id="scheduleTable">
       <thead>
-        <tr><th>عنوان</th><th>روز</th><th>ساعت</th><th>لینک</th><th></th></tr>
+        <tr><th>عنوان</th><th>روز</th><th>ساعت</th><th>لینک</th><th>وضعیت</th><th></th></tr>
       </thead>
       <tbody id="scheduleBody"></tbody>
     </table>

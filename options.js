@@ -43,6 +43,7 @@ function renderScheduleTable() {
   });
   for (const entry of sorted) {
     const tr = document.createElement("tr");
+    if (entry.enabled === false) tr.classList.add("disabled-entry");
     const tdLabel = document.createElement("td");
     tdLabel.textContent = entry.label || "—";
     tdLabel.style.color = entry.label ? "var(--text)" : "var(--muted)";
@@ -70,7 +71,21 @@ function renderScheduleTable() {
       renderScheduleTable();
     });
     tdRemove.appendChild(btn);
-    tr.append(tdLabel, tdDay, tdTime, tdLink, tdRemove);
+    const tdToggle = document.createElement("td");
+    const toggleBtn = document.createElement("button");
+    const isEnabled = entry.enabled !== false;
+    toggleBtn.textContent = isEnabled ? "فعال" : "غیرفعال";
+    toggleBtn.className = isEnabled ? "toggle-on" : "toggle-off";
+    toggleBtn.addEventListener("click", () => {
+      const e = state.schedule.find((s) => s.id === entry.id);
+      if (e) e.enabled = e.enabled === false ? true : false;
+      chrome.storage.sync.set(state, () => {
+        chrome.runtime.sendMessage({ type: "reschedule" });
+      });
+      renderScheduleTable();
+    });
+    tdToggle.appendChild(toggleBtn);
+    tr.append(tdLabel, tdDay, tdTime, tdLink, tdToggle, tdRemove);
     body.appendChild(tr);
   }
   if (sorted.length === 0) {
@@ -159,6 +174,7 @@ $("addScheduleBtn").addEventListener("click", () => {
       id: uid(),
       day,
       time,
+      enabled: true,
       ...(label ? { label } : {}),
       ...(link ? { meetLink: link } : {}),
     });

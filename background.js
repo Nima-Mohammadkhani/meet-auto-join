@@ -50,6 +50,7 @@ async function scheduleAll() {
   const settings = await chrome.storage.sync.get(DEFAULTS);
   const now = new Date();
   for (const entry of settings.schedule) {
+    if (entry.enabled === false) continue;
     const [hh, mm] = entry.time.split(":").map(Number);
     const when = nextOccurrence(entry.day, hh, mm, now);
     chrome.alarms.create(ALARM_PREFIX + entry.id, { when: when.getTime() });
