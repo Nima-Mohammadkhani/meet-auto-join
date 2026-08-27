@@ -2,6 +2,8 @@ const ALARM_PREFIX = "meet-join-";
 const NOTIFY_PREFIX = "meet-notify-";
 const MAX_RETRIES = 2;
 const RETRY_DELAY_MS = 25000;
+const SNOOZE_PREFIX = "meet-snooze-";
+const SNOOZE_MINUTES = 5;
 const retryCount = new Map();
 const TELEGRAM_API = "https://api.telegram.org/bot";
 const DEFAULT_TELEGRAM_MESSAGE =
@@ -69,19 +71,25 @@ function showPreMeetingNotification(entry, minutesBefore) {
     type: "basic",
     iconUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
     title,
-    message: `روز ${DAY_NAMES_BG[entry.day] || ""} ساعت ${entry.time} — ${minutesBefore} دقیقه دیگر شروع می‌شود.`,
-    buttons: [{ title: "ورود الان" }],
+    message: minutesBefore > 0
+      ? `روز ${DAY_NAMES_BG[entry.day] || ""} ساعت ${entry.time} — ${minutesBefore} دقیقه دیگر شروع می‌شود.`
+      : `روز ${DAY_NAMES_BG[entry.day] || ""} ساعت ${entry.time} — الان وقت ورود است.`,
+    buttons: [{ title: "ورود الان" }, { title: `${SNOOZE_MINUTES} دقیقه دیگر` }],
     requireInteraction: true,
   });
 }
 
 chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIndex) => {
-  if (!notificationId.startsWith(NOTIFY_PREFIX) || buttonIndex !== 0) return;
+  if (!notificationId.startsWith(NOTIFY_PREFIX)) return;
   const id = notificationId.slice(NOTIFY_PREFIX.length);
-  const settings = await chrome.storage.sync.get(DEFAULTS);
-  const entry = settings.schedule.find((e) => e.id === id);
   chrome.notifications.clear(notificationId);
-  await openAndJoinMeeting(entry ? entry.meetLink : undefined);
+  if (buttonIndex === 0) {
+    const settings = await chrome.storage.sync.get(DEFAULTS);
+    const entry = settings.schedule.find((e) => e.id === id);
+    await openAndJoinMeeting(entry ? entry.meetLink : undefined);
+  } else if (buttonIndex === 1) {
+    chrome.alarms.create(SNOOZE_PREFIX + id, { when: Date.now() + SNOOZE_MINUTES * 60000 });
+  }
 });
 
 async function sendTelegram(text) {
@@ -142,6 +150,14 @@ chrome.runtime.onStartup.addListener(() => {
 });
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
+  if (alarm.name.startsWith(SNOOZE_PREFIX)) {
+    const id = alarm.name.slice(SNOOZE_PREFIX.length);
+    const settings = await chrome.storage.sync.get(DEFAULTS);
+    const entry = settings.schedule.find((e) => e.id === id);
+    if (entry) showPreMeetingNotification(entry, 0);
+    return;
+  }
+
   if (alarm.name.startsWith(NOTIFY_PREFIX)) {
     const id = alarm.name.slice(NOTIFY_PREFIX.length);
     const settings = await chrome.storage.sync.get(DEFAULTS);
