@@ -60,11 +60,12 @@ async function scheduleAll() {
 }
 
 function showPreMeetingNotification(entry, minutesBefore) {
+  const title = entry.label ? `⏰ ${entry.label}` : "⏰ جلسه در راه است";
   chrome.notifications.create(NOTIFY_PREFIX + entry.id, {
     type: "basic",
     iconUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
-    title: "⏰ جلسه در راه است",
-    message: `جلسه روز ${DAY_NAMES_BG[entry.day] || ""} ساعت ${entry.time} — ${minutesBefore} دقیقه دیگر شروع می‌شود.`,
+    title,
+    message: `روز ${DAY_NAMES_BG[entry.day] || ""} ساعت ${entry.time} — ${minutesBefore} دقیقه دیگر شروع می‌شود.`,
   });
 }
 

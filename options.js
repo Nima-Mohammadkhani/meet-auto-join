@@ -43,6 +43,9 @@ function renderScheduleTable() {
   });
   for (const entry of sorted) {
     const tr = document.createElement("tr");
+    const tdLabel = document.createElement("td");
+    tdLabel.textContent = entry.label || "—";
+    tdLabel.style.color = entry.label ? "var(--text)" : "var(--muted)";
     const tdDay = document.createElement("td");
     tdDay.textContent = DAY_NAMES[entry.day];
     const tdTime = document.createElement("td");
@@ -67,7 +70,7 @@ function renderScheduleTable() {
       renderScheduleTable();
     });
     tdRemove.appendChild(btn);
-    tr.append(tdDay, tdTime, tdLink, tdRemove);
+    tr.append(tdLabel, tdDay, tdTime, tdLink, tdRemove);
     body.appendChild(tr);
   }
   if (sorted.length === 0) {
@@ -150,11 +153,19 @@ $("addScheduleBtn").addEventListener("click", () => {
     return;
   }
   const link = $("entryLink").value.trim();
+  const label = $("entryLabel").value.trim();
   for (const day of selectedDays) {
-    state.schedule.push({ id: uid(), day, time, ...(link ? { meetLink: link } : {}) });
+    state.schedule.push({
+      id: uid(),
+      day,
+      time,
+      ...(label ? { label } : {}),
+      ...(link ? { meetLink: link } : {}),
+    });
   }
   selectedDays.clear();
   document.querySelectorAll(".day-btn.active").forEach((b) => b.classList.remove("active"));
+  $("entryLabel").value = "";
   $("entryLink").value = "";
   renderScheduleTable();
 });

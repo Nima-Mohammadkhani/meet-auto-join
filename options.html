@@ -119,12 +119,13 @@
       <input type="time" id="timeInput" value="09:00" />
       <button id="addScheduleBtn">افزودن</button>
     </div>
+    <input type="text" id="entryLabel" placeholder="عنوان جلسه (اختیاری — مثلاً: دیلی استندآپ)" style="margin-bottom: 8px;" />
     <input type="url" id="entryLink" placeholder="لینک جلسه این ردیف (اختیاری — خالی = استفاده از لینک پیش‌فرض)" style="margin-bottom: 8px;" />
     <div class="hint">می‌توانید چند روز را هم‌زمان انتخاب کنید تا برای همه در یک ساعت اضافه شود. برای روزهای مختلف با ساعت‌های متفاوت، هر بار جدا اضافه کنید.</div>
 
     <table id="scheduleTable">
       <thead>
-        <tr><th>روز</th><th>ساعت</th><th>لینک</th><th></th></tr>
+        <tr><th>عنوان</th><th>روز</th><th>ساعت</th><th>لینک</th><th></th></tr>
       </thead>
       <tbody id="scheduleBody"></tbody>
     </table>
