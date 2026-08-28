@@ -1,4 +1,4 @@
-const t = (key) => chrome.i18n.getMessage(key);
+const t = (key) => window.__t ? window.__t(key) : chrome.i18n.getMessage(key);
 
 chrome.alarms.getAll((alarms) => {
   chrome.storage.sync.get({ schedule: [] }, ({ schedule }) => {
