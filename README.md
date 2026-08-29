@@ -1,6 +1,6 @@
 ﻿<div align="center">
 
-# 📅 Meet Auto Join
+# 📅 Meet Auto Join 📅
 
 **Automatically join your Google Meet meetings — on schedule, hands-free.**
 
